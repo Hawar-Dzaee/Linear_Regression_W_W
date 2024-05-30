@@ -16,7 +16,7 @@ model_upper_bound = 3
 
 # inputs for dataset 
 
-secret_w1 = torch.tensor(1.0)
+secret_w1 = torch.tensor(0.4)
 secret_w2 = torch.tensor(1.0)
 
 x1 = torch.linspace(lower_bound,upper_bound,sample_size)
@@ -28,6 +28,7 @@ X1 = X1_mesh.flatten()
 X2 = X2_mesh.flatten()
 
 y = (secret_w1*X1) + (secret_w2*X2)
+
 
 
 
@@ -48,7 +49,7 @@ def generate_plot(w1,w2):
   plane = go.Surface(
     x = X1_mesh,
     y = X2_mesh,
-    z = (w1 * X1_mesh) + (w2 * X1_mesh) ,
+    z = (w1 * X1_mesh) + (w2 * X2_mesh) ,
     colorscale = ['rgb(27,158,119)','rgb(27,158,119)'],
     opacity = 0.8,
     showscale = False
@@ -58,9 +59,9 @@ def generate_plot(w1,w2):
 
   layout = go.Layout(
     scene= dict(
-      xaxis = dict(title='X1',range=[-20,20]),
-      yaxis = dict(title='X2',range=[-20,20]),
-      zaxis = dict(title='y',range=[-50,50])
+      xaxis = dict(title='X1',range=[-10,10],zeroline=True),
+      yaxis = dict(title='X2',range=[-10,10],zeroline=True),
+      zaxis = dict(title='y', range=[-10,10],zeroline=True)
     )
   )
 
@@ -98,6 +99,7 @@ losses_T = torch.tensor(losses)   # changing to tensor, so we `reshape` it later
 #-------------------------------------
 # Plot Loss function landscape, Global minima, ball
 
+
 def loss_landscape(w1,w2):
 
   grid = go.Surface(
@@ -105,7 +107,7 @@ def loss_landscape(w1,w2):
     y = W2_mesh,
     z = losses_T.reshape(W1_mesh.shape),
     name = "loss functions landscape",
-    opacity = 0.4
+    opacity = 0.4,
   )
 
   Global_minima = go.Scatter3d(
@@ -129,12 +131,21 @@ def loss_landscape(w1,w2):
 
   layout = go.Layout(
      scene = dict(
-        xaxis = dict(title='w1',range=[-3,3]),
-        yaxis = dict(title='w2',range=[-3,3]),
-     )
+        xaxis = dict(title='w1',range=[-6,6]),
+        yaxis = dict(title='w2',range=[-6,6]),
+        zaxis = dict(title ='loss')
+     ),
+
+    legend=dict(
+      x=1.3,  # Position the legend to the right
+      y=0.9,  # Vertically center the legend
+      bgcolor='rgba(255, 255, 255, 0.5)',  # Semi-transparent background
+      bordercolor='black',
+      borderwidth=1
+  )
   )
 
-  figure = go.Figure(data = [grid,Global_minima,ball])
+  figure = go.Figure(data = [grid,Global_minima,ball],layout=layout)
 
   return figure 
 
@@ -151,8 +162,8 @@ st.write('By : Hawar Dzaee')
 
 with st.sidebar:
     st.subheader("Adjust the parameters to minimize the loss")
-    w1_val = st.slider("weight 1:  (w1)", min_value=-4.0, max_value=4.0, step=0.1, value= -3.5)
-    w2_val = st.slider("weight 2   (w2)", min_value=-4.0, max_value=4.0, step=0.1, value= -3.2)
+    w1_val = st.slider("weight 1:  (w1)", min_value=-3.0, max_value=3.0, step=0.1, value= -2.5)
+    w2_val = st.slider("weight 2   (w2)", min_value=-3.0, max_value=3.0, step=0.1, value= -2.2)
 
 
 container = st.container()
