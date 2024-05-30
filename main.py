@@ -4,9 +4,7 @@ import numpy as np
 import plotly.graph_objects as go
 #-----------------------------------------
 
-# Data & Toy model creation 
-# The reason for the toy model to have their on inputs (not using the same as Data creation) is purely for visualizaiton purposes... 
-# so that the Toy model doesn't look smaller we parameters is being played with.
+# Dataset & Toy model creation
 
 lower_bound = -2
 upper_bound = 2
@@ -18,23 +16,20 @@ model_upper_bound = 3
 
 # inputs for dataset 
 
-secret_w1 = torch.tensor(0.7)
-secret_w2 = torch.tensor(0.3)
+secret_w1 = torch.tensor(1.0)
+secret_w2 = torch.tensor(1.0)
 
-X1 = torch.linspace(lower_bound,upper_bound,sample_size)
-X2 = torch.linspace(lower_bound,upper_bound,sample_size) # to manipulate the shaprpness of the loss function, play with the scale of the features.
-y= secret_w1*X1 + secret_w2*X2
-
-mesh_X1 ,mesh_X2 = torch.meshgrid(X1,X2,indexing='ij') # we mish so that datapoints cover an area and not just a line.
-y_mesh = (secret_w1*mesh_X1) + (secret_w2*mesh_X2)
+x1 = torch.linspace(lower_bound,upper_bound,sample_size)
+x2 = torch.linspace(lower_bound,upper_bound,sample_size) # to manipulate the shaprpness of the loss function, play with the scale of the features.
 
 
+X1_mesh ,X2_mesh = torch.meshgrid(x1,x2,indexing='ij')
+X1 = X1_mesh.flatten()
+X2 = X2_mesh.flatten()
 
-# inputs for model 
-X1_model = torch.linspace(model_lower_bound,model_upper_bound,sample_size)
-X2_model = torch.linspace(model_lower_bound,model_upper_bound,sample_size) 
+y = (secret_w1*X1) + (secret_w2*X2)
 
-mesh_X1_model ,mesh_X2_model = torch.meshgrid(X1_model,X2_model,indexing='ij')    # we mish because the toy model is a plane (dahh)
+
 
 #-----------------------------------------
 # Plot Data & model
@@ -43,17 +38,17 @@ def generate_plot(w1,w2):
 
   # use vector for Scatter3d [Data Generation]
   Datapoints = go.Scatter3d(
-      x = mesh_X1.flatten(),
-      y = mesh_X2.flatten(),
-      z = y_mesh.flatten(),
+      x = X1,
+      y = X2,
+      z = y,
       mode = 'markers'
   )
 
   # use matrix for Surface [Toy model]
   plane = go.Surface(
-    x = mesh_X1_model,
-    y = mesh_X2_model,
-    z = (w1 * mesh_X1_model) + (w2 * mesh_X2_model),  
+    x = X1_mesh,
+    y = X2_mesh,
+    z = (w1 * X1_mesh) + (w2 * X1_mesh) ,
     colorscale = ['rgb(27,158,119)','rgb(27,158,119)'],
     opacity = 0.8,
     showscale = False
@@ -81,10 +76,10 @@ def generate_plot(w1,w2):
 # setting possible parameter(s) combo
 chain_size = 100
 
-W1_matrix,W2_matrix = torch.meshgrid(torch.linspace(-6,6,chain_size),torch.linspace(-6,6,chain_size),indexing='ij')
+W1_mesh,W2_mesh  = torch.meshgrid(torch.linspace(-6,6,chain_size),torch.linspace(-6,6,chain_size),indexing='ij')
 
-W1 = W1_matrix.flatten()
-W2 = W2_matrix.flatten()
+W1 = W1_mesh.flatten()
+W2 = W2_mesh.flatten()
 
 
 
@@ -92,7 +87,7 @@ W2 = W2_matrix.flatten()
 losses = []
 
 for w1,w2 in zip(W1,W2):
-  y_hat = mesh_X1*w1 + mesh_X2*w2
+  y_hat = X1*w1 + X2*w2
   loss = torch.mean((y - y_hat)**2)
   losses.append(loss)
 
@@ -106,9 +101,9 @@ losses_T = torch.tensor(losses)   # changing to tensor, so we `reshape` it later
 def loss_landscape(w1,w2):
 
   grid = go.Surface(
-    x = W1_matrix,
-    y = W2_matrix,
-    z = losses_T.reshape(W1_matrix.shape),
+    x = W1_mesh,
+    y = W2_mesh,
+    z = losses_T.reshape(W1_mesh.shape),
     name = "loss functions landscape",
     opacity = 0.4
   )
