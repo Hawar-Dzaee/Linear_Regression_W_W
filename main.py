@@ -8,10 +8,9 @@ import plotly.graph_objects as go
 
 lower_bound = -2
 upper_bound = 2
-sample_size = 5
+sample_size = 4
 
-model_lower_bound = -3
-model_upper_bound = 3
+
 
 
 # inputs for dataset 
@@ -61,7 +60,8 @@ def generate_plot(w1,w2):
     scene= dict(
       xaxis = dict(title='X1',range=[-10,10],zeroline=True),
       yaxis = dict(title='X2',range=[-10,10],zeroline=True),
-      zaxis = dict(title='y', range=[-10,10],zeroline=True)
+      zaxis = dict(title='y', range=[-10,10],zeroline=True),
+      aspectmode='cube',
     )
   )
 
@@ -162,8 +162,12 @@ st.write('By : Hawar Dzaee')
 
 with st.sidebar:
     st.subheader("Adjust the parameters to minimize the loss")
-    w1_val = st.slider("weight 1:  (w1)", min_value=-3.0, max_value=3.0, step=0.1, value= -2.5)
-    w2_val = st.slider("weight 2   (w2)", min_value=-3.0, max_value=3.0, step=0.1, value= -2.2)
+    w1_val = st.slider("weight 1:  ($w_{1}$)", min_value=-3.0, max_value=3.0, step=0.1, value=-2.5)
+    w2_val = st.slider("weight 2:  ($w_{2}$)", min_value=-3.0, max_value=3.0, step=0.1, value=-2.2)
+
+
+
+
 
 
 container = st.container()
@@ -179,10 +183,13 @@ with container:
     with col1:
         figure_1 = generate_plot(w1_val, w2_val)
         st.plotly_chart(figure_1, use_container_width=True, aspect_ratio=5.0)  # Change aspect ratio to 1.0
-        st.latex(r'''\hat{y} = w1X1 + w2X2''')
+        st.latex(r'''\hat{y} = w_{1}X_{1} + w_{2}X_{2}''')
+
+  
 
     # Plot figure_2 in the second column
     with col2:
         figure_2 = loss_landscape(w1_val, w2_val)
         st.plotly_chart(figure_2, use_container_width=True, aspect_ratio=5.0)
-        st.latex(r"""\text{MSE(w1,w2)} = \frac{1}{n} \sum_{i=1}^n (\ y_i- (w1X1 + w2X2) )^2""")
+        st.latex(r"""\text{MSE}(w_{1},w_{2}) = \frac{1}{n} \sum_{i=1}^n (y_{i} - (w_{1} X_{1} + w_{2} X_{2}))^2""")
+
