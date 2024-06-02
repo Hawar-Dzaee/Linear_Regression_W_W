@@ -39,7 +39,9 @@ def generate_plot(w1,w2):
       x = X1,
       y = X2,
       z = y,
-      mode = 'markers'
+      mode = 'markers',
+      name = "Data",
+      showlegend = True
   )
 
   # use matrix for Surface [Toy model]
@@ -47,14 +49,18 @@ def generate_plot(w1,w2):
     x = X1_mesh,
     y = X2_mesh,
     z = (w1 * X1_mesh) + (w2 * X2_mesh) ,
+    name = 'model',
     colorscale = ['rgb(27,158,119)','rgb(27,158,119)'],
     opacity = 0.8,
-    showscale = False
+    showscale = False,
+    showlegend = True
 
 
   )
 
   layout = go.Layout(
+     
+
     scene= dict(
        
       xaxis = dict( 
@@ -78,14 +84,20 @@ def generate_plot(w1,w2):
 
       aspectmode='cube',
 
-      # camera = dict(eye=dict(x= -3.15,y= -1.45,z=0.2))
       camera = dict(
                     up=dict(x=0, y=0, z=1),       # default values
                     center=dict(x=0, y=0, z=0),   # default values 
                     eye=dict(x=1.2, y=0.8, z=0.2)
       ),
+    ),
+    legend=dict(
+            x=0.8,  # Adjust the x position
+            y=0.9,  # Adjust the y position
+            xanchor='left',
+            yanchor='top',
+            font=dict(size=12)  # Adjust font size if necessary
+        )
 
-    )
 
   )
 
@@ -166,7 +178,7 @@ def loss_landscape(w1,w2):
       x=1.3,  # Position the legend to the right
       y=0.9,  # Vertically center the legend
       bgcolor='rgba(255, 255, 255, 0.5)',  # Semi-transparent background
-      bordercolor='black',
+      # bordercolor='black',
       borderwidth=1
   )
   )
@@ -209,7 +221,7 @@ with container:
         figure_1 = generate_plot(w1_val, w2_val)
         st.plotly_chart(figure_1, use_container_width=True, aspect_ratio=5.0)  # Change aspect ratio to 1.0
         st.latex(r'''\hat{y} = \color{green}{w_{1}}\color{black}X_{1} \color{black}+ \color{green}{w_{2}}\color{black}X_{2}''')
-        st.latex(fr'''\hat{{y}} = {w1_val}X_{{1}} + {w2_val}X_{{2}}''')
+        st.latex(fr'''\hat{{y}} = \color{{green}}{{{w1_val}}}\color{{black}}X_{{1}} + \color{{green}}{{{w2_val}}}\color{{black}}X_{{2}}''')
 
   
 
@@ -217,8 +229,10 @@ with container:
     with col2:
         figure_2 = loss_landscape(w1_val, w2_val)
         st.plotly_chart(figure_2, use_container_width=True, aspect_ratio=5.0)
-        st.latex(r"""\text{MSE}(w_{1},w_{2}) = \frac{1}{n} \sum_{i=1}^n (y_{i} - (w_{1} X_{1} + w_{2} X_{2}))^2""")
-        st.latex(fr"""\text{{MSE}}({w1_val:.2f},{w2_val:.2f}) = \frac{{1}}{{n}} \sum_{{i=1}}^n (y_{{i}} - ({w1_val:.2f} X_{{1}} + {w2_val:.2f} X_{{2}}))^2""")
+        st.latex(r'''\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 ''')
+        st.latex(r'''\text{MSE}({\color{green}w_{1}},{\color{green}w_{2}}) = \frac{1}{n} \sum_{i=1}^n (y_{i} - ({\color{green}w_{1}} X_{1} + {\color{green}w_{2}} X_{2}))^2''')
+        st.latex(fr"""\text{{MSE}}(\textcolor{{green}}{{{w1_val:.2f}}},\textcolor{{green}}{{{w2_val:.2f}}}) = \frac{{1}}{{n}} \sum_{{i=1}}^n (y_{{i}} - (\textcolor{{green}}{{{w1_val:.2f}}} X_{{1}} + \textcolor{{green}}{{{w2_val:.2f}}} X_{{2}}))^2""")
+
 
 
 
