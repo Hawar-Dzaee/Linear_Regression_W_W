@@ -85,8 +85,8 @@ def generate_plot(w1,w2):
       aspectmode='cube',
 
       camera = dict(
-                    up=dict(x=0, y=0, z=1),       # default values
-                    center=dict(x=0, y=0, z=0),   # default values 
+                    # up=dict(x=0, y=0, z=1),       # default values
+                    # center=dict(x=0, y=0, z=0),   # default values 
                     eye=dict(x=1.2, y=0.8, z=0.2)
       ),
     ),
