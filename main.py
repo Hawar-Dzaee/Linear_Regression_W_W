@@ -175,8 +175,8 @@ def loss_landscape(w1,w2):
      ),
 
     legend=dict(
-      x=1.3,  # Position the legend to the right
-      y=0.9,  # Vertically center the legend
+      x=1.15,  # Position the legend to the right
+      y= 0.95,  # Vertically center the legend
       bgcolor='rgba(255, 255, 255, 0.5)',  # Semi-transparent background
       # bordercolor='black',
       borderwidth=1
@@ -205,8 +205,6 @@ with st.sidebar:
 
 
 
-
-
 container = st.container()
 
 with container:
@@ -224,15 +222,24 @@ with container:
         st.latex(fr'''\hat{{y}} = \color{{green}}{{{w1_val}}}\color{{black}}X_{{1}} + \color{{green}}{{{w2_val}}}\color{{black}}X_{{2}}''')
 
   
+    y_pred = w1_val * X1 + w2_val * X2
+    MSE = torch.mean((y - y_pred) ** 2).item()
 
     # Plot figure_2 in the second column
     with col2:
         figure_2 = loss_landscape(w1_val, w2_val)
         st.plotly_chart(figure_2, use_container_width=True, aspect_ratio=5.0)
+
         st.latex(r'''\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2 ''')
         st.latex(r'''\text{MSE}({\color{green}w_{1}},{\color{green}w_{2}}) = \frac{1}{n} \sum_{i=1}^n (y_{i} - ({\color{green}w_{1}} X_{1} + {\color{green}w_{2}} X_{2}))^2''')
         st.latex(fr"""\text{{MSE}}(\textcolor{{green}}{{{w1_val:.2f}}},\textcolor{{green}}{{{w2_val:.2f}}}) = \frac{{1}}{{n}} \sum_{{i=1}}^n (y_{{i}} - (\textcolor{{green}}{{{w1_val:.2f}}} X_{{1}} + \textcolor{{green}}{{{w2_val:.2f}}} X_{{2}}))^2""")
+        st.latex(fr"\text{{MSE}}(\textcolor{{green}}{{{w1_val:.2f}}},\textcolor{{green}}{{{w2_val:.2f}}}) = \textcolor{{red}}{{{MSE:.4f}}}")
 
+
+
+
+
+ 
 
 
 
