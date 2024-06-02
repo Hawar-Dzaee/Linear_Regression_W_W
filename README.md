@@ -16,6 +16,8 @@ This web application visualizes a multivariable linear regression model with two
       Mean Squared Error (MSE) Equation: Used in the second plot.
 
 
+
+
 ## Installation
 
 To run this application, you need to have Python installed on your machine. Follow the steps below to set up the environment:
@@ -63,6 +65,9 @@ Once the application is running, you will see two plots:
 
   * Displays the Mean Squared Error (MSE) landscape.
   * Interactive adjustment of weights to observe how the loss changes
+
+
+![Alt text](<Screen Shot 2024-06-02 at 6.09.38 PM.png>)
 
 
 

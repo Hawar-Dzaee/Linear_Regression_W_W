@@ -193,7 +193,7 @@ def loss_landscape(w1,w2):
 st.set_page_config(layout='wide')
 
 
-st.title("Linear Regression : Two Features, No Bias")
+st.title("Multivariable Linear Regression")
 st.write('By : Hawar Dzaee')
 
 
