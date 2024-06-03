@@ -209,7 +209,6 @@ container = st.container()
 
 with container:
  
-    st.write("")  # Add an empty line to create space
 
     # Create two columns with different widths
     col1, col2 = st.columns([3,3])
